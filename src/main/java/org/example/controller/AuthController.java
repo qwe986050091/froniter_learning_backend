@@ -1,10 +1,13 @@
 package org.example.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.example.annotation.RequireAuth;
 import org.example.service.FrontierServiceImpl;
 import org.example.thrift.LoginRequest;
 import org.example.thrift.LoginResponse;
 import org.example.thrift.ServiceException;
+import org.example.thrift.UserInfo;
 import org.apache.thrift.TException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +65,30 @@ public class AuthController {
             error.put("message", "Internal server error");
             return ResponseEntity.internalServerError().body(error);
         }
+    }
+
+    @GetMapping("/verify")
+    @RequireAuth
+    public ResponseEntity<Map<String, Object>> verifyToken(HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>();
+        UserInfo userInfo = (UserInfo) request.getAttribute("currentUser");
+        result.put("valid", true);
+        result.put("message", "Token is valid");
+        result.put("userInfo", userInfo);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/logout")
+    @RequireAuth
+    public ResponseEntity<Map<String, Object>> logout(HttpServletRequest request) {
+        String token = (String) request.getAttribute("currentToken");
+        if (token != null) {
+            frontierService.logout(token);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("message", "Logout successful");
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/health")

@@ -10,17 +10,18 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class FrontierServiceImpl implements FrontierService.Iface {
 
     private final Map<String, UserInfo> userStore = new ConcurrentHashMap<>();
-    private final AtomicLong tokenCounter = new AtomicLong(0);
+    private final Map<String, String> passwordStore = new ConcurrentHashMap<>();
+    private final TokenService tokenService;
 
-    public FrontierServiceImpl() {
+    public FrontierServiceImpl(TokenService tokenService) {
+        this.tokenService = tokenService;
+
         UserInfo admin = new UserInfo();
         admin.setUserId("1");
         admin.setUsername("admin");
@@ -29,6 +30,7 @@ public class FrontierServiceImpl implements FrontierService.Iface {
         admin.setRoles(List.of("ADMIN", "USER"));
         admin.setExtra(Map.of("department", "IT", "level", "9"));
         userStore.put("admin", admin);
+        passwordStore.put("admin", "123456");
 
         UserInfo user = new UserInfo();
         user.setUserId("2");
@@ -38,6 +40,7 @@ public class FrontierServiceImpl implements FrontierService.Iface {
         user.setRoles(List.of("USER"));
         user.setExtra(Map.of("department", "Operations", "level", "3"));
         userStore.put("user", user);
+        passwordStore.put("user", "user123");
     }
 
     @Override
@@ -55,8 +58,13 @@ public class FrontierServiceImpl implements FrontierService.Iface {
             throw new ServiceException("USER_NOT_FOUND", "User does not exist: " + req.getUsername());
         }
 
-        String token = UUID.randomUUID().toString().replace("-", "");
-        String refreshToken = UUID.randomUUID().toString().replace("-", "");
+        String storedPassword = passwordStore.get(req.getUsername());
+        if (storedPassword == null || !storedPassword.equals(req.getPassword())) {
+            throw new ServiceException("PASSWORD_INVALID", "Password is incorrect");
+        }
+
+        String token = tokenService.generateToken(req.getUsername());
+        String refreshToken = tokenService.generateRefreshToken(req.getUsername());
 
         LoginResponse response = new LoginResponse();
         response.setCode("200");
@@ -66,5 +74,17 @@ public class FrontierServiceImpl implements FrontierService.Iface {
         response.setUserInfo(userInfo);
 
         return response;
+    }
+
+    public UserInfo getUserByToken(String token) {
+        String username = tokenService.validateToken(token);
+        if (username == null) {
+            return null;
+        }
+        return userStore.get(username);
+    }
+
+    public void logout(String token) {
+        tokenService.invalidateToken(token);
     }
 }
