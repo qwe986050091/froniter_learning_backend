@@ -24,6 +24,14 @@ struct UserInfo {
     6: optional map<string, string> extra
 }
 
+struct MenuItem {
+    1: required string id
+    2: required string name
+    3: optional string icon
+    4: optional string path
+    5: optional list<MenuItem> children
+}
+
 exception ServiceException {
     1: required string code
     2: required string description
@@ -31,4 +39,5 @@ exception ServiceException {
 
 service FrontierService {
     LoginResponse login(1: LoginRequest req) throws (1: ServiceException e)
+    list<MenuItem> getMenu() throws (1: ServiceException e)
 }

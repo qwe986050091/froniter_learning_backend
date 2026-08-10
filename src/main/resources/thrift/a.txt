@@ -1,3 +1,1 @@
-thrift-0.24.0.exe --gen java:jakarta_annotations -out .\frontier_test_backend\src\main\java .\frontier_test_backend\src\main\resources\thrift\service.thrift
-
-thrift-0.24.0.exe --gen js:ts -out .\frontier_test_admin\src\thrift .\frontier_test_backend\src\main\resources\thrift\service.thrift
+D:\code\thrift-0.24.0.exe --gen java:jakarta_annotations -out D:\code\frontier_test_backend\src\main\java D:\code\frontier_test_backend\src\main\resources\thrift\service.thrift
