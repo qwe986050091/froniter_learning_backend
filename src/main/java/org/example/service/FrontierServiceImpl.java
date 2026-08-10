@@ -83,25 +83,49 @@ public class FrontierServiceImpl implements FrontierService.Iface {
         List<MenuItem> menu = new ArrayList<>();
 
         // 首页
-        menu.add(new MenuItem("home", "首页").setIcon("HomeFilled").setPath("/home"));
+        menu.add(new MenuItem("home", "首页")
+                .setIcon("HomeFilled")
+                .setPath("/home")
+                .setDesc("这里是系统首页总览。"));
 
         // 数据管理
-        MenuItem dataGroup = new MenuItem("group1", "数据管理").setIcon("DataBoard");
+        MenuItem dataGroup = new MenuItem("group1", "数据管理")
+                .setIcon("DataBoard")
+                .setDesc("这里是数据管理分组。");
         dataGroup.setChildren(List.of(
-                new MenuItem("dashboard", "数据看板").setIcon("Odometer").setPath("/dashboard"),
-                new MenuItem("statistics", "统计分析").setIcon("TrendCharts").setPath("/statistics")
+                new MenuItem("dashboard", "数据看板")
+                        .setIcon("Odometer")
+                        .setPath("/dashboard")
+                        .setDesc("这里是数据看板页面。"),
+                new MenuItem("statistics", "统计分析")
+                        .setIcon("TrendCharts")
+                        .setPath("/statistics")
+                        .setDesc("这里是统计分析页面。")
         ));
         menu.add(dataGroup);
 
         // 系统设置
-        MenuItem systemGroup = new MenuItem("group2", "系统设置").setIcon("Setting");
-        MenuItem moreGroup = new MenuItem("group2-1", "更多设置").setIcon("Tools");
+        MenuItem systemGroup = new MenuItem("group2", "系统设置")
+                .setIcon("Setting")
+                .setDesc("这里是系统设置分组。");
+        MenuItem moreGroup = new MenuItem("group2-1", "更多设置")
+                .setIcon("Tools")
+                .setDesc("这里是更多设置分组。");
         moreGroup.setChildren(List.of(
-                new MenuItem("system-config", "系统配置").setIcon("Monitor").setPath("/system-config")
+                new MenuItem("system-config", "系统配置")
+                        .setIcon("Monitor")
+                        .setPath("/system-config")
+                        .setDesc("这里是系统配置页面。")
         ));
         systemGroup.setChildren(List.of(
-                new MenuItem("user-manage", "用户管理").setIcon("User").setPath("/user-manage"),
-                new MenuItem("role-manage", "角色管理").setIcon("Avatar").setPath("/role-manage"),
+                new MenuItem("user-manage", "用户管理")
+                        .setIcon("User")
+                        .setPath("/user-manage")
+                        .setDesc("这里是用户管理页面。"),
+                new MenuItem("role-manage", "角色管理")
+                        .setIcon("Avatar")
+                        .setPath("/role-manage")
+                        .setDesc("这里是角色管理页面。"),
                 moreGroup
         ));
         menu.add(systemGroup);

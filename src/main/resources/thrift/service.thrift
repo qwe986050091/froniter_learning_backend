@@ -29,7 +29,8 @@ struct MenuItem {
     2: required string name
     3: optional string icon
     4: optional string path
-    5: optional list<MenuItem> children
+    5: optional string desc
+    6: optional list<MenuItem> children
 }
 
 exception ServiceException {

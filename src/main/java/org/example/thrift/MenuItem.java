@@ -15,7 +15,8 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
   private static final org.apache.thrift.protocol.TField NAME_FIELD_DESC = new org.apache.thrift.protocol.TField("name", org.apache.thrift.protocol.TType.STRING, (short)2);
   private static final org.apache.thrift.protocol.TField ICON_FIELD_DESC = new org.apache.thrift.protocol.TField("icon", org.apache.thrift.protocol.TType.STRING, (short)3);
   private static final org.apache.thrift.protocol.TField PATH_FIELD_DESC = new org.apache.thrift.protocol.TField("path", org.apache.thrift.protocol.TType.STRING, (short)4);
-  private static final org.apache.thrift.protocol.TField CHILDREN_FIELD_DESC = new org.apache.thrift.protocol.TField("children", org.apache.thrift.protocol.TType.LIST, (short)5);
+  private static final org.apache.thrift.protocol.TField DESC_FIELD_DESC = new org.apache.thrift.protocol.TField("desc", org.apache.thrift.protocol.TType.STRING, (short)5);
+  private static final org.apache.thrift.protocol.TField CHILDREN_FIELD_DESC = new org.apache.thrift.protocol.TField("children", org.apache.thrift.protocol.TType.LIST, (short)6);
 
   private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new MenuItemStandardSchemeFactory();
   private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new MenuItemTupleSchemeFactory();
@@ -24,6 +25,7 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
   public @org.apache.thrift.annotation.Nullable java.lang.String name; // required
   public @org.apache.thrift.annotation.Nullable java.lang.String icon; // optional
   public @org.apache.thrift.annotation.Nullable java.lang.String path; // optional
+  public @org.apache.thrift.annotation.Nullable java.lang.String desc; // optional
   public @org.apache.thrift.annotation.Nullable java.util.List<MenuItem> children; // optional
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -32,7 +34,8 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
     NAME((short)2, "name"),
     ICON((short)3, "icon"),
     PATH((short)4, "path"),
-    CHILDREN((short)5, "children");
+    DESC((short)5, "desc"),
+    CHILDREN((short)6, "children");
 
     private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -56,7 +59,9 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
           return ICON;
         case 4: // PATH
           return PATH;
-        case 5: // CHILDREN
+        case 5: // DESC
+          return DESC;
+        case 6: // CHILDREN
           return CHILDREN;
         default:
           return null;
@@ -101,7 +106,7 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
   }
 
   // isset id assignments
-  private static final _Fields[] optionals = {_Fields.ICON,_Fields.PATH,_Fields.CHILDREN};
+  private static final _Fields[] optionals = {_Fields.ICON,_Fields.PATH,_Fields.DESC,_Fields.CHILDREN};
   public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
   static {
     java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
@@ -112,6 +117,8 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
     tmpMap.put(_Fields.ICON, new org.apache.thrift.meta_data.FieldMetaData("icon", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     tmpMap.put(_Fields.PATH, new org.apache.thrift.meta_data.FieldMetaData("path", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+    tmpMap.put(_Fields.DESC, new org.apache.thrift.meta_data.FieldMetaData("desc", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     tmpMap.put(_Fields.CHILDREN, new org.apache.thrift.meta_data.FieldMetaData("children", org.apache.thrift.TFieldRequirementType.OPTIONAL, 
         new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
@@ -148,6 +155,9 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
     if (other.isSetPath()) {
       this.path = other.path;
     }
+    if (other.isSetDesc()) {
+      this.desc = other.desc;
+    }
     if (other.isSetChildren()) {
       java.util.List<MenuItem> __this__children = new java.util.ArrayList<MenuItem>(other.children.size());
       for (MenuItem other_element : other.children) {
@@ -168,6 +178,7 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
     this.name = null;
     this.icon = null;
     this.path = null;
+    this.desc = null;
     this.children = null;
   }
 
@@ -271,6 +282,31 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
     }
   }
 
+  @org.apache.thrift.annotation.Nullable
+  public java.lang.String getDesc() {
+    return this.desc;
+  }
+
+  public MenuItem setDesc(@org.apache.thrift.annotation.Nullable java.lang.String desc) {
+    this.desc = desc;
+    return this;
+  }
+
+  public void unsetDesc() {
+    this.desc = null;
+  }
+
+  /** Returns true if field desc is set (has been assigned a value) and false otherwise */
+  public boolean isSetDesc() {
+    return this.desc != null;
+  }
+
+  public void setDescIsSet(boolean value) {
+    if (!value) {
+      this.desc = null;
+    }
+  }
+
   public int getChildrenSize() {
     return (this.children == null) ? 0 : this.children.size();
   }
@@ -347,6 +383,14 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
       }
       break;
 
+    case DESC:
+      if (value == null) {
+        unsetDesc();
+      } else {
+        setDesc((java.lang.String)value);
+      }
+      break;
+
     case CHILDREN:
       if (value == null) {
         unsetChildren();
@@ -374,6 +418,9 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
     case PATH:
       return getPath();
 
+    case DESC:
+      return getDesc();
+
     case CHILDREN:
       return getChildren();
 
@@ -397,6 +444,8 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
       return isSetIcon();
     case PATH:
       return isSetPath();
+    case DESC:
+      return isSetDesc();
     case CHILDREN:
       return isSetChildren();
     }
@@ -452,6 +501,15 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
         return false;
     }
 
+    boolean this_present_desc = true && this.isSetDesc();
+    boolean that_present_desc = true && that.isSetDesc();
+    if (this_present_desc || that_present_desc) {
+      if (!(this_present_desc && that_present_desc))
+        return false;
+      if (!this.desc.equals(that.desc))
+        return false;
+    }
+
     boolean this_present_children = true && this.isSetChildren();
     boolean that_present_children = true && that.isSetChildren();
     if (this_present_children || that_present_children) {
@@ -483,6 +541,10 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
     hashCode = hashCode * 8191 + ((isSetPath()) ? 131071 : 524287);
     if (isSetPath())
       hashCode = hashCode * 8191 + path.hashCode();
+
+    hashCode = hashCode * 8191 + ((isSetDesc()) ? 131071 : 524287);
+    if (isSetDesc())
+      hashCode = hashCode * 8191 + desc.hashCode();
 
     hashCode = hashCode * 8191 + ((isSetChildren()) ? 131071 : 524287);
     if (isSetChildren())
@@ -535,6 +597,16 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
     }
     if (isSetPath()) {
       lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.path, other.path);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = java.lang.Boolean.compare(isSetDesc(), other.isSetDesc());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    if (isSetDesc()) {
+      lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.desc, other.desc);
       if (lastComparison != 0) {
         return lastComparison;
       }
@@ -605,6 +677,16 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
         sb.append("null");
       } else {
         sb.append(this.path);
+      }
+      first = false;
+    }
+    if (isSetDesc()) {
+      if (!first) sb.append(", ");
+      sb.append("desc:");
+      if (this.desc == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.desc);
       }
       first = false;
     }
@@ -703,7 +785,15 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
               break;
-            case 5: // CHILDREN
+            case 5: // DESC
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.desc = iprot.readString();
+                struct.setDescIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 6: // CHILDREN
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
                   org.apache.thrift.protocol.TList _list18 = iprot.readListBegin();
@@ -765,6 +855,13 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
           oprot.writeFieldEnd();
         }
       }
+      if (struct.desc != null) {
+        if (struct.isSetDesc()) {
+          oprot.writeFieldBegin(DESC_FIELD_DESC);
+          oprot.writeString(struct.desc);
+          oprot.writeFieldEnd();
+        }
+      }
       if (struct.children != null) {
         if (struct.isSetChildren()) {
           oprot.writeFieldBegin(CHILDREN_FIELD_DESC);
@@ -806,15 +903,21 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
       if (struct.isSetPath()) {
         optionals.set(1);
       }
-      if (struct.isSetChildren()) {
+      if (struct.isSetDesc()) {
         optionals.set(2);
       }
-      oprot.writeBitSet(optionals, 3);
+      if (struct.isSetChildren()) {
+        optionals.set(3);
+      }
+      oprot.writeBitSet(optionals, 4);
       if (struct.isSetIcon()) {
         oprot.writeString(struct.icon);
       }
       if (struct.isSetPath()) {
         oprot.writeString(struct.path);
+      }
+      if (struct.isSetDesc()) {
+        oprot.writeString(struct.desc);
       }
       if (struct.isSetChildren()) {
         {
@@ -836,7 +939,7 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
         struct.setIdIsSet(true);
         struct.name = iprot.readString();
         struct.setNameIsSet(true);
-        java.util.BitSet incoming = iprot.readBitSet(3);
+        java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           struct.icon = iprot.readString();
           struct.setIconIsSet(true);
@@ -846,6 +949,10 @@ public class MenuItem implements org.apache.thrift.TBase<MenuItem, MenuItem._Fie
           struct.setPathIsSet(true);
         }
         if (incoming.get(2)) {
+          struct.desc = iprot.readString();
+          struct.setDescIsSet(true);
+        }
+        if (incoming.get(3)) {
           {
             org.apache.thrift.protocol.TList _list23 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
             struct.children = new java.util.ArrayList<MenuItem>(_list23.size);
