@@ -3,11 +3,13 @@ package org.example.service;
 import org.example.thrift.FrontierService;
 import org.example.thrift.LoginRequest;
 import org.example.thrift.LoginResponse;
+import org.example.thrift.MenuItem;
 import org.example.thrift.ServiceException;
 import org.example.thrift.UserInfo;
 import org.apache.thrift.TException;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -74,6 +76,37 @@ public class FrontierServiceImpl implements FrontierService.Iface {
         response.setUserInfo(userInfo);
 
         return response;
+    }
+
+    @Override
+    public List<MenuItem> getMenu() throws ServiceException, TException {
+        List<MenuItem> menu = new ArrayList<>();
+
+        // 首页
+        menu.add(new MenuItem("home", "首页").setIcon("HomeFilled").setPath("/home"));
+
+        // 数据管理
+        MenuItem dataGroup = new MenuItem("group1", "数据管理").setIcon("DataBoard");
+        dataGroup.setChildren(List.of(
+                new MenuItem("dashboard", "数据看板").setIcon("Odometer").setPath("/dashboard"),
+                new MenuItem("statistics", "统计分析").setIcon("TrendCharts").setPath("/statistics")
+        ));
+        menu.add(dataGroup);
+
+        // 系统设置
+        MenuItem systemGroup = new MenuItem("group2", "系统设置").setIcon("Setting");
+        MenuItem moreGroup = new MenuItem("group2-1", "更多设置").setIcon("Tools");
+        moreGroup.setChildren(List.of(
+                new MenuItem("system-config", "系统配置").setIcon("Monitor").setPath("/system-config")
+        ));
+        systemGroup.setChildren(List.of(
+                new MenuItem("user-manage", "用户管理").setIcon("User").setPath("/user-manage"),
+                new MenuItem("role-manage", "角色管理").setIcon("Avatar").setPath("/role-manage"),
+                moreGroup
+        ));
+        menu.add(systemGroup);
+
+        return menu;
     }
 
     public UserInfo getUserByToken(String token) {
