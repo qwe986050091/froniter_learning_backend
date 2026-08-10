@@ -95,11 +95,11 @@ public class FrontierServiceImpl implements FrontierService.Iface {
         dataGroup.setChildren(List.of(
                 new MenuItem("dashboard", "数据看板")
                         .setIcon("Odometer")
-                        .setPath("/dashboard")
+                        .setPath("/home/dashboard")
                         .setDesc("这里是数据看板页面。"),
                 new MenuItem("statistics", "统计分析")
                         .setIcon("TrendCharts")
-                        .setPath("/statistics")
+                        .setPath("/home/statistics")
                         .setDesc("这里是统计分析页面。")
         ));
         menu.add(dataGroup);
@@ -114,17 +114,17 @@ public class FrontierServiceImpl implements FrontierService.Iface {
         moreGroup.setChildren(List.of(
                 new MenuItem("system-config", "系统配置")
                         .setIcon("Monitor")
-                        .setPath("/system-config")
+                        .setPath("/home/system-config")
                         .setDesc("这里是系统配置页面。")
         ));
         systemGroup.setChildren(List.of(
                 new MenuItem("user-manage", "用户管理")
                         .setIcon("User")
-                        .setPath("/user-manage")
+                        .setPath("/home/user-manage")
                         .setDesc("这里是用户管理页面。"),
                 new MenuItem("role-manage", "角色管理")
                         .setIcon("Avatar")
-                        .setPath("/role-manage")
+                        .setPath("/home/role-manage")
                         .setDesc("这里是角色管理页面。"),
                 moreGroup
         ));
