@@ -88,15 +88,15 @@ public class FrontierServiceImpl implements FrontierService.Iface {
                 .setPath("/home")
                 .setDesc("这里是系统首页总览。"));
 
-        // 数据管理
-        MenuItem dataGroup = new MenuItem("group1", "数据管理")
+        // 商品管理
+        MenuItem dataGroup = new MenuItem("group1", "商品管理")
                 .setIcon("DataBoard")
-                .setDesc("这里是数据管理分组。");
+                .setDesc("这里是商品管理分组。");
         dataGroup.setChildren(List.of(
-                new MenuItem("dashboard", "数据看板")
+                new MenuItem("brand-manage", "品牌管理")
                         .setIcon("Odometer")
-                        .setPath("/home/dashboard")
-                        .setDesc("这里是数据看板页面。"),
+                        .setPath("/home/brand-manage")
+                        .setDesc("这里是品牌管理页面。"),
                 new MenuItem("statistics", "统计分析")
                         .setIcon("TrendCharts")
                         .setPath("/home/statistics")
