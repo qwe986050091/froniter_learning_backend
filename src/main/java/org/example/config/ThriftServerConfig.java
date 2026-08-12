@@ -7,6 +7,7 @@ import org.example.service.FrontierServiceImpl;
 import org.example.thrift.auth.AuthService;
 import org.example.thrift.brand.BrandService;
 import org.example.thrift.menu.MenuService;
+import org.example.thrift.product.ProductService;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.TThreadPoolServer;
@@ -44,6 +45,9 @@ public class ThriftServerConfig {
         multiplexedProcessor.registerProcessor(
                 BrandService.class.getSimpleName(),
                 new BrandService.Processor<>(frontierService));
+        multiplexedProcessor.registerProcessor(
+                ProductService.class.getSimpleName(),
+                new ProductService.Processor<>(frontierService));
 
         TCompactProtocol.Factory protocolFactory = new TCompactProtocol.Factory();
 
@@ -53,7 +57,7 @@ public class ThriftServerConfig {
                 .minWorkerThreads(2)
                 .maxWorkerThreads(10));
 
-        log.info("Starting Thrift server on port: {} (services: AuthService, MenuService, BrandService)", port);
+        log.info("Starting Thrift server on port: {} (services: AuthService, MenuService, BrandService, ProductService)", port);
         new Thread(server::serve).start();
         log.info("Thrift server started successfully on port: {}", port);
     }

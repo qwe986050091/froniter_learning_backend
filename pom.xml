@@ -75,7 +75,9 @@
                 <executions>
                     <execution>
                         <id>generate-thrift</id>
-                        <phase>generate-sources</phase>
+                        <!-- 用户指定使用 thriftGenerator.txt 中的本地 exe 命令生成代码，不允许 maven 插件自动在 generate-sources 阶段执行。
+                             phase 设为 none，只保留插件配置用于手动调用（若需要）。 -->
+                        <phase>none</phase>
                         <goals><goal>exec</goal></goals>
                         <configuration>
                             <executable>thrift</executable>
