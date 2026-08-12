@@ -2,7 +2,7 @@ package org.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.annotation.RequireAuth;
-import org.example.thrift.UserInfo;
+import org.example.thrift.common.UserInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

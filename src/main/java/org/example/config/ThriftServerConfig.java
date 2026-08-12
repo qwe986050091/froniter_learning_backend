@@ -4,7 +4,10 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.example.service.FrontierServiceImpl;
-import org.example.thrift.FrontierService;
+import org.example.thrift.auth.AuthService;
+import org.example.thrift.brand.BrandService;
+import org.example.thrift.menu.MenuService;
+import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
@@ -30,16 +33,27 @@ public class ThriftServerConfig {
     @PostConstruct
     public void start() throws Exception {
         TServerTransport serverTransport = new TServerSocket(port);
-        FrontierService.Processor<FrontierServiceImpl> processor = new FrontierService.Processor<>(frontierService);
+
+        TMultiplexedProcessor multiplexedProcessor = new TMultiplexedProcessor();
+        multiplexedProcessor.registerProcessor(
+                AuthService.class.getSimpleName(),
+                new AuthService.Processor<>(frontierService));
+        multiplexedProcessor.registerProcessor(
+                MenuService.class.getSimpleName(),
+                new MenuService.Processor<>(frontierService));
+        multiplexedProcessor.registerProcessor(
+                BrandService.class.getSimpleName(),
+                new BrandService.Processor<>(frontierService));
+
         TCompactProtocol.Factory protocolFactory = new TCompactProtocol.Factory();
 
         server = new TThreadPoolServer(new TThreadPoolServer.Args(serverTransport)
-                .processor(processor)
+                .processor(multiplexedProcessor)
                 .protocolFactory(protocolFactory)
                 .minWorkerThreads(2)
                 .maxWorkerThreads(10));
 
-        log.info("Starting Thrift server on port: {}", port);
+        log.info("Starting Thrift server on port: {} (services: AuthService, MenuService, BrandService)", port);
         new Thread(server::serve).start();
         log.info("Thrift server started successfully on port: {}", port);
     }
