@@ -221,6 +221,136 @@ public class ProductController {
         }
     }
 
+    // ==================== SPU ====================
+
+    @GetMapping("/spus")
+    public ResponseEntity<SpuPageResult> listSpus(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long brandId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        SpuQuery q = new SpuQuery();
+        if (categoryId != null) q.setCategoryId(categoryId);
+        if (brandId != null) q.setBrandId(brandId);
+        if (name != null) q.setName(name);
+        if (status != null) q.setStatus(status);
+        q.setPage(page);
+        q.setPageSize(pageSize);
+        try {
+            return ResponseEntity.ok(frontierService.listSpu(q));
+        } catch (ServiceException e) {
+            log.warn("listSpus failed: code={}, desc={}", e.getCode(), e.getDescription());
+            return ResponseEntity.badRequest().build();
+        } catch (TException e) {
+            log.error("listSpus thrift error", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/spus/{id}")
+    public ResponseEntity<?> getSpuById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(frontierService.getSpuById(id));
+        } catch (ServiceException e) {
+            log.warn("getSpuById failed: id={}, code={}, desc={}", id, e.getCode(), e.getDescription());
+            return ResponseEntity.badRequest().body(errorOf(e));
+        } catch (TException e) {
+            log.error("getSpuById thrift error, id=" + id, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/spus")
+    public ResponseEntity<?> createSpu(@RequestBody Map<String, Object> body) {
+        SpuCreateRequest req = new SpuCreateRequest();
+        req.setName(str(body.get("name")));
+        if (body.get("description") != null) req.setDescription(str(body.get("description")));
+        req.setCategoryId(toLong(body.get("categoryId"), 0L));
+        if (body.get("brandId") != null) req.setBrandId(toLong(body.get("brandId"), 0L));
+        if (body.get("sort") != null) req.setSort(toInt(body.get("sort"), 0));
+        if (body.get("status") != null) req.setStatus(toInt(body.get("status"), 1));
+        try {
+            return ResponseEntity.ok(frontierService.createSpu(req));
+        } catch (ServiceException e) {
+            log.warn("createSpu failed: code={}, desc={}", e.getCode(), e.getDescription());
+            return ResponseEntity.badRequest().body(errorOf(e));
+        } catch (TException e) {
+            log.error("createSpu thrift error", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PutMapping("/spus/{id}")
+    public ResponseEntity<?> updateSpu(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        SpuUpdateRequest req = new SpuUpdateRequest();
+        req.setId(id);
+        req.setName(str(body.get("name")));
+        if (body.get("description") != null) req.setDescription(str(body.get("description")));
+        if (body.get("categoryId") != null) req.setCategoryId(toLong(body.get("categoryId"), 0L));
+        if (body.get("brandId") != null) req.setBrandId(toLong(body.get("brandId"), 0L));
+        if (body.get("sort") != null) req.setSort(toInt(body.get("sort"), 0));
+        if (body.get("status") != null) req.setStatus(toInt(body.get("status"), 1));
+        try {
+            return ResponseEntity.ok(frontierService.updateSpu(req));
+        } catch (ServiceException e) {
+            log.warn("updateSpu failed: id={}, code={}, desc={}", id, e.getCode(), e.getDescription());
+            return ResponseEntity.badRequest().body(errorOf(e));
+        } catch (TException e) {
+            log.error("updateSpu thrift error, id=" + id, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PatchMapping("/spus/{id}/status")
+    public ResponseEntity<?> updateSpuStatus(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        SpuStatusRequest req = new SpuStatusRequest();
+        req.setId(id);
+        req.setStatus(toInt(body.get("status"), 0));
+        try {
+            boolean ok = frontierService.updateSpuStatus(req);
+            return ResponseEntity.ok(Map.of("success", ok));
+        } catch (ServiceException e) {
+            log.warn("updateSpuStatus failed: id={}, code={}, desc={}", id, e.getCode(), e.getDescription());
+            return ResponseEntity.badRequest().body(errorOf(e));
+        } catch (TException e) {
+            log.error("updateSpuStatus thrift error, id=" + id, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PatchMapping("/spus/{id}/sort")
+    public ResponseEntity<?> updateSpuSort(@PathVariable Long id, @RequestBody Map<String, Object> body) {
+        SpuSortRequest req = new SpuSortRequest();
+        req.setId(id);
+        req.setSort(toInt(body.get("sort"), 0));
+        try {
+            boolean ok = frontierService.updateSpuSort(req);
+            return ResponseEntity.ok(Map.of("success", ok));
+        } catch (ServiceException e) {
+            log.warn("updateSpuSort failed: id={}, code={}, desc={}", id, e.getCode(), e.getDescription());
+            return ResponseEntity.badRequest().body(errorOf(e));
+        } catch (TException e) {
+            log.error("updateSpuSort thrift error, id=" + id, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping("/spus/{id}")
+    public ResponseEntity<?> deleteSpuById(@PathVariable Long id) {
+        try {
+            boolean ok = frontierService.deleteSpuById(id);
+            return ResponseEntity.ok(Map.of("success", ok));
+        } catch (ServiceException e) {
+            log.warn("deleteSpuById failed: id={}, code={}, desc={}", id, e.getCode(), e.getDescription());
+            return ResponseEntity.badRequest().body(errorOf(e));
+        } catch (TException e) {
+            log.error("deleteSpuById thrift error, id=" + id, e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     // ========== helpers ==========
 
     private static String str(Object v) {

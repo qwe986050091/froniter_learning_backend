@@ -129,6 +129,10 @@ public class FrontierServiceImpl
                         .setIcon("Collection")
                         .setPath("/home/platform-attr-manage")
                         .setDesc("平台分类与平台属性管理。"),
+                new MenuItem("spu-manage", "SPU 管理")
+                        .setIcon("Goods")
+                        .setPath("/home/spu-manage")
+                        .setDesc("商品 SPU 列表与上下架管理。"),
                 new MenuItem("statistics", "统计分析")
                         .setIcon("TrendCharts")
                         .setPath("/home/statistics")
@@ -558,10 +562,12 @@ public class FrontierServiceImpl
     private final Map<Long, Category> categoryStore = new ConcurrentHashMap<>();
     private final Map<Long, PlatformAttr> attrStore = new ConcurrentHashMap<>();
     private final Map<Long, PlatformAttrValue> attrValueStore = new ConcurrentHashMap<>();
+    private final Map<Long, Spu> spuStore = new ConcurrentHashMap<>();
 
     private final AtomicLong categoryIdSeq = new AtomicLong(0);
     private final AtomicLong attrIdSeq = new AtomicLong(0);
     private final AtomicLong attrValueIdSeq = new AtomicLong(0);
+    private final AtomicLong spuIdSeq = new AtomicLong(0);
 
     {
         // ---- 分类树：3 一级 × 3 二级 × 2 三级 = 18 个三级 ----
@@ -657,6 +663,42 @@ public class FrontierServiceImpl
 
         seedAttrValues(outdoorL3, "防水等级", List.of("防泼水","5000mm 防水","10000mm 防水","20000mm 以上"), 1);
         seedAttrValues(outdoorL3, "适用季节", List.of("春","夏","秋冬","四季通用"), 2);
+
+        // ---- SPU 种子：挂到「手机 / 手机通讯 / 手机」三级分类下 ----
+        // 31 条：截图 3 条 + 28 条后续品牌，保证 10/页至少 4 页
+        seedSpu(phoneL3, "OPPO", "OPPO（OPPO 广东移动通信有限公司），是由陈明永于2004年创立，[107] 是一家全球领先的智能终端制造商和移动互联网服务提供商 [108]，业务遍及50多个国家和地区。 [109] 通过40多万个销售网点及2500个服务中心，与全球用户共享科技之美。 [110]", 1, 1);
+        seedSpu(phoneL3, "vivo", "vivo品牌产品包括智能手机、平板电脑、智能手表等 [103]，截至2022年8月，进驻60多个国家和地区，全球用户覆盖4亿多人，研发覆盖深圳、东莞（总部）、北京、上海、南京、杭州、西安等", 2, 1);
+        seedSpu(phoneL3, "华为", "华为技术有限公司，成立于1987年，总部位于广东省深圳市龙岗区。2021年，华为公司的总收入为6368亿元，净利润达到1137亿元。华为是全球领先的信息与通信技术（ICT）解决方案供应商，专注于ICT领域，坚持稳健经营、持续创新、开放合作，在电信运营商、企业、终端和云计算等领域构筑了端到端的解决方案优势", 3, 1);
+        seedSpu(phoneL3, "小米", "小米是一家以智能手机、智能硬件和IoT平台为核心的消费电子及智能制造公司，2010年成立，2018年港交所上市，产品覆盖手机、小米电视、米家生态链等100+品类。", 4, 1);
+        seedSpu(phoneL3, "三星", "三星电子是韩国最大的消费电子巨头，Galaxy S/Note/Z 系列手机覆盖高端、折叠屏多条产品线，在屏幕、存储、芯片等上游技术领域拥有完整产业链能力。", 5, 1);
+        seedSpu(phoneL3, "苹果", "苹果公司（Apple Inc.）是全球顶级消费电子与软件企业，iPhone 产品线坚持自研 A 系列芯片与 iOS 系统，在高端手机市场常年占据销量与利润第一。", 6, 1);
+        seedSpu(phoneL3, "魅族", "魅族（MEIZU）创立于2003年，以 MP3 起家后转型智能手机，以 Flyme 系统和独特设计风格著称，近年加入吉利集团，聚焦中高端与汽车跨界联动。", 7, 1);
+        seedSpu(phoneL3, "荣耀", "荣耀（HONOR）原属华为子品牌，2020年独立运营后快速恢复产品线，Magic 系列主打高端影像与屏幕，数字系列主打年轻化与轻旗舰体验。", 8, 1);
+        seedSpu(phoneL3, "一加", "一加手机（OnePlus）创立于2013年，主打「不将就」与海外极客市场，长期与哈苏合作影像调校，性能旗舰在国内与海外都有稳定拥趸。", 9, 1);
+        seedSpu(phoneL3, "红米", "Redmi（红米）是小米旗下子品牌，主打极致性价比，Note/K 系列覆盖千元到三千元段，销量常年稳居线上手机头部。", 10, 1);
+        seedSpu(phoneL3, "realme", "realme 真我是面向年轻潮流用户的科技品牌，主打「敢越级」的配置与价格，产品在印度、东南亚及国内线上市场增速显著，多在中端价位与 Redmi 对垒。", 11, 1);
+        seedSpu(phoneL3, "索尼", "索尼（SONY）Xperia 系列是日系代表的影像旗舰，拥有专业蔡司镜头、4K HDR OLED 屏幕与专业级视频录制，在影音发烧友群体中口碑极佳。", 12, 1);
+        seedSpu(phoneL3, "诺基亚", "诺基亚（Nokia）是经典手机老牌，早年功能机时代统治全球市场，目前依托 HMD Global 推出多款安卓智能手机，主打耐用性、续航与经典情怀。", 13, 1);
+        seedSpu(phoneL3, "摩托罗拉", "motorola 是移动通信鼻祖，发明了全球第一部商用手机，目前归属联想旗下，以 edge 系列旗舰与 razr 折叠屏产品继续活跃在全球市场。", 14, 1);
+        seedSpu(phoneL3, "联想", "联想集团旗下手机品牌曾以乐檬、ZUK、拯救者电竞手机等多条产品线出现，目前拯救者Legion游戏手机在高性能电竞细分领域保持稳定口碑。", 15, 0);
+        seedSpu(phoneL3, "中兴", "中兴（ZTE）是全球领先的综合通信解决方案提供商，曾推出全球首款商用屏下摄像头手机Axon 30，Axon系列在影像与商务市场占有稳定份额。", 16, 1);
+        seedSpu(phoneL3, "锤子", "锤子科技由罗永浩创立，Smartisan T/M 系列以极具个性的锤子OS系统、工匠精神和大爆炸/一步等交互创新闻名，目前品牌业务归属字节跳动。", 17, 0);
+        seedSpu(phoneL3, "iQOO", "iQOO 是 vivo 旗下独立高端性能品牌，主打旗舰芯片、120W 超级快充与游戏优化，K/数字/Neo 三条产品线完整覆盖性能用户。", 18, 1);
+        seedSpu(phoneL3, "黑鲨", "黑鲨科技由小米投资，是中国专业电竞手机开山品牌，手机配备磁吸散热、压感屏幕、肩键等电竞外设，与腾讯游戏深度合作优化。", 19, 1);
+        seedSpu(phoneL3, "ROG", "华硕 ROG Phone 玩家国度游戏手机，是全球顶级电竞手机代表，搭配酷冷风冷散热、AirTrigger 超声波肩键与专业手游性能调校。", 20, 1);
+        seedSpu(phoneL3, "金立", "金立曾是老牌国产手机代表，以「金品质，立天下」广告语和商务待机长著称，目前品牌在少数功能机与入门机型市场仍有推出。", 21, 0);
+        seedSpu(phoneL3, "TCL", "TCL 通讯是全球第五大手机厂商，旗下阿尔卡特（Alcatel）、黑莓授权、TCL 自有品牌多条线运行，在海外入门功能机与智能机市场表现稳定。", 22, 1);
+        seedSpu(phoneL3, "酷派", "酷派（Coolpad）是国产老牌手机厂商，曾参与国内 3G/4G 智能机第一波普及，目前品牌多在运营商合约与入门机型中推出新品。", 23, 0);
+        seedSpu(phoneL3, "海信", "海信手机依托海信集团在显示、通信与家电全生态链，主打护眼阅读屏、三防耐用机与运营商入门机型，U 系列护眼屏在阅读爱好者中有口碑。", 24, 1);
+        seedSpu(phoneL3, "康佳", "康佳（KONKA）是老牌家电企业，手机业务多在运营商合约机和入门功能机市场，近年也尝试推出三防长续航老人机细分。", 25, 0);
+        seedSpu(phoneL3, "长虹", "长虹集团旗下手机业务，早年以国虹通讯推出直板老人机与功能机为主，近年推出 4G/5G 老人机和入门大屏手机，偏向三线线下渠道。", 26, 1);
+        seedSpu(phoneL3, "飞利浦", "飞利浦（Philips）手机主打超长待机、健康监测和商务老人机，以 30 天超长续航、健康检测仪等差异化功能在特定人群中保持稳定口碑。", 27, 1);
+        seedSpu(phoneL3, "松下", "松下（Panasonic）手机早期推出多款日系拍照与三防机（如 P-series），目前专注企业级专用机、工业三防平板及海外入门功能机市场。", 28, 1);
+        seedSpu(phoneL3, "夏普", "夏普（SHARP）手机是日系窄边框全面屏先驱，首款无边框 Crystal 与 Aquos 系列在屏幕素质与拍照领域口碑优良，近年与国内品牌合作推出新品。", 29, 1);
+        seedSpu(phoneL3, "LG", "LG 电子 2021 年宣布退出智能手机业务，但历史上 G/Velvet/V 系列以 HiFi 四通道 DAC、模块化与顶级屏幕闻名，经典产品仍在二手机市场流通。", 30, 0);
+        seedSpu(phoneL3, "HTC", "HTC（宏达电）是全球第一家安卓智能手机制造商，早期 One 系列与 Vive VR 业务闻名，目前主要发力 VIVERSE 元宇宙与企业级解决方案。", 31, 0);
+        seedSpu(phoneL3, "谷歌Pixel", "Google Pixel 系列是谷歌官方安卓亲儿子，首发每一代 Android 正式版本，在计算摄影（Computational Photography）与AI能力上代表行业最高水平。", 32, 1);
+        seedSpu(phoneL3, "华硕", "华硕（ASUS）ZenFone 系列主打小屏旗舰，ROG Phone 则是电竞顶级机型品牌，在台湾、东南亚和欧洲市场都有稳定的市场表现。", 33, 1);
     }
 
     private Category seedCategory(String name, long parentId, int level, int sort, int status) {
@@ -704,6 +746,20 @@ public class FrontierServiceImpl
         List<String> all = new ArrayList<>(values);
         if (extras != null) all.addAll(extras);
         seedAttrValues(cateId, attrName, all, 1);
+    }
+
+    private Spu seedSpu(long cateId, String name, String desc, int sort, int status) {
+        Spu s = new Spu();
+        s.setName(name);
+        s.setDescription(desc);
+        s.setCategoryId(cateId);
+        s.setSort(sort);
+        s.setStatus(status);
+        long id = spuIdSeq.incrementAndGet();
+        s.setId(id);
+        s.setCreateTime(LocalDateTime.now().format(DT_FMT));
+        spuStore.put(id, s);
+        return s;
     }
 
     private List<PlatformAttrValue> valuesOfAttr(long attrId) {
@@ -938,6 +994,120 @@ public class FrontierServiceImpl
         PlatformAttr removed = attrStore.remove(id);
         if (removed == null) throw new ServiceException("NOT_FOUND", "PlatformAttr not found: id=" + id);
         deleteValuesOfAttr(id);
+        return true;
+    }
+
+    // ==================== SPU 管理 ====================
+
+    @Override
+    public SpuPageResult listSpu(SpuQuery query) throws ServiceException, TException {
+        int page = (query != null && query.isSetPage() && query.getPage() > 0) ? query.getPage() : 1;
+        int pageSize = (query != null && query.isSetPageSize() && query.getPageSize() > 0) ? query.getPageSize() : 10;
+
+        List<Spu> all = spuStore.values().stream()
+                .filter(s -> query == null || !query.isSetCategoryId() || s.getCategoryId() == query.getCategoryId())
+                .filter(s -> query == null || !query.isSetBrandId() || (s.isSetBrandId() && s.getBrandId() == query.getBrandId()))
+                .filter(s -> query == null || !query.isSetName() || (s.getName() != null && s.getName().contains(query.getName().trim())))
+                .filter(s -> query == null || !query.isSetStatus() || (s.isSetStatus() && s.getStatus() == query.getStatus()))
+                .sorted(Comparator
+                        .comparingInt((Spu s) -> s.isSetSort() ? s.getSort() : 0)
+                        .thenComparingLong(Spu::getId))
+                .collect(Collectors.toList());
+
+        long total = all.size();
+        int from = (page - 1) * pageSize;
+        int to = Math.min(from + pageSize, all.size());
+        List<Spu> slice = from >= all.size() ? List.of() : all.subList(from, to);
+
+        SpuPageResult r = new SpuPageResult();
+        r.setList(new ArrayList<>(slice));
+        r.setTotal(total);
+        r.setPage(page);
+        r.setPageSize(pageSize);
+        return r;
+    }
+
+    @Override
+    public Spu getSpuById(long id) throws ServiceException, TException {
+        Spu s = spuStore.get(id);
+        if (s == null) throw new ServiceException("NOT_FOUND", "SPU not found: id=" + id);
+        return s;
+    }
+
+    @Override
+    public Spu createSpu(SpuCreateRequest req) throws ServiceException, TException {
+        if (req == null || req.getName() == null || req.getName().isBlank()) {
+            throw new ServiceException("VALIDATION_ERROR", "SPU 名称不能为空");
+        }
+        if (!req.isSetCategoryId() || req.getCategoryId() <= 0) {
+            throw new ServiceException("VALIDATION_ERROR", "必须选择所属分类（categoryId）");
+        }
+        String name = req.getName().trim();
+        boolean dup = spuStore.values().stream()
+                .anyMatch(x -> x.getCategoryId() == req.getCategoryId() && name.equals(x.getName()));
+        if (dup) throw new ServiceException("DUPLICATE_NAME", "同分类下已存在同名SPU：" + name);
+
+        Spu s = new Spu();
+        s.setName(name);
+        if (req.isSetDescription()) s.setDescription(req.getDescription());
+        s.setCategoryId(req.getCategoryId());
+        if (req.isSetBrandId()) s.setBrandId(req.getBrandId());
+        s.setSort(req.isSetSort() ? req.getSort() : 0);
+        s.setStatus(req.isSetStatus() ? req.getStatus() : 1);
+        long id = spuIdSeq.incrementAndGet();
+        s.setId(id);
+        s.setCreateTime(LocalDateTime.now().format(DT_FMT));
+        spuStore.put(id, s);
+        return s;
+    }
+
+    @Override
+    public Spu updateSpu(SpuUpdateRequest req) throws ServiceException, TException {
+        if (req == null || !req.isSetId()) {
+            throw new ServiceException("NOT_FOUND", "SPU id is required");
+        }
+        Spu s = spuStore.get(req.getId());
+        if (s == null) throw new ServiceException("NOT_FOUND", "SPU not found: id=" + req.getId());
+        if (req.getName() == null || req.getName().isBlank()) {
+            throw new ServiceException("VALIDATION_ERROR", "SPU 名称不能为空");
+        }
+        String name = req.getName().trim();
+        long cateId = req.isSetCategoryId() ? req.getCategoryId() : s.getCategoryId();
+        boolean dup = spuStore.values().stream()
+                .anyMatch(x -> x.getId() != s.getId() && x.getCategoryId() == cateId && name.equals(x.getName()));
+        if (dup) throw new ServiceException("DUPLICATE_NAME", "同分类下已存在同名SPU：" + name);
+
+        s.setName(name);
+        if (req.isSetDescription()) s.setDescription(req.getDescription());
+        if (req.isSetCategoryId()) s.setCategoryId(req.getCategoryId());
+        if (req.isSetBrandId()) s.setBrandId(req.getBrandId());
+        if (req.isSetSort()) s.setSort(req.getSort());
+        if (req.isSetStatus()) s.setStatus(req.getStatus());
+        return s;
+    }
+
+    @Override
+    public boolean updateSpuStatus(SpuStatusRequest req) throws ServiceException, TException {
+        if (req == null || !req.isSetId()) throw new ServiceException("NOT_FOUND", "SPU id is required");
+        Spu s = spuStore.get(req.getId());
+        if (s == null) throw new ServiceException("NOT_FOUND", "SPU not found: id=" + req.getId());
+        s.setStatus(req.isSetStatus() ? req.getStatus() : 1);
+        return true;
+    }
+
+    @Override
+    public boolean updateSpuSort(SpuSortRequest req) throws ServiceException, TException {
+        if (req == null || !req.isSetId()) throw new ServiceException("NOT_FOUND", "SPU id is required");
+        Spu s = spuStore.get(req.getId());
+        if (s == null) throw new ServiceException("NOT_FOUND", "SPU not found: id=" + req.getId());
+        s.setSort(req.isSetSort() ? req.getSort() : 0);
+        return true;
+    }
+
+    @Override
+    public boolean deleteSpuById(long id) throws ServiceException, TException {
+        Spu removed = spuStore.remove(id);
+        if (removed == null) throw new ServiceException("NOT_FOUND", "SPU not found: id=" + id);
         return true;
     }
 }
